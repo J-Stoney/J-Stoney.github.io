@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jesutoni Gabriel OLUSESI — Aerospace Engineer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:   #080B12;
+      --navy:    #0D1321;
+      --steel:   #1E3A5F;
+      --silver:  #A8B2C1;
+      --white:   #F0F4F8;
+      --cyan:    #00C8FF;
+      --cyan-dim: rgba(0,200,255,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── CANVAS ── */
+    #starfield {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 6vw;
+      background: rgba(8,11,18,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,200,255,0.08);
+    }
+
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--silver);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.25s;
+    }
+
+    .nav-links a:hover { color: var(--cyan); }
+
+    /* ── SECTIONS SHARED ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 7rem 6vw;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--cyan) 0%, transparent 80%);
+      margin-bottom: 3.5rem;
+      opacity: 0.35;
+    }
+
+    h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--white);
+      margin-bottom: 2.5rem;
+      line-height: 1.2;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 8rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+
+    .hero-name span {
+      color: var(--cyan);
+    }
+
+    .hero-tagline {
+      margin-top: 1.5rem;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--silver);
+      max-width: 560px;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+
+    .hero-cta {
+      margin-top: 3rem;
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: all 0.25s;
+    }
+
+    .btn-primary {
+      background: var(--cyan);
+      color: var(--black);
+      border: 1px solid var(--cyan);
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--cyan);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--silver);
+      border: 1px solid rgba(168,178,193,0.3);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--silver);
+      font-size: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .about-text p strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .interest-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+
+    .tag {
+      padding: 0.35rem 0.9rem;
+      border: 1px solid rgba(0,200,255,0.25);
+      border-radius: 2px;
+      font-size: 0.75rem;
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .skill-card {
+      background: var(--navy);
+      border: 1px solid rgba(0,200,255,0.1);
+      padding: 1.75rem;
+      border-radius: 4px;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .skill-card:hover {
+      border-color: rgba(0,200,255,0.4);
+      transform: translateY(-3px);
+    }
+
+    .skill-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .skill-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+
+    .skill-card p {
+      font-size: 0.85rem;
+      color: var(--silver);
+    }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.75rem;
+    }
+
+    .project-card {
+      background: var(--navy);
+      border: 1px solid rgba(0,200,255,0.1);
+      border-radius: 4px;
+      padding: 2rem;
+      transition: border-color 0.25s, transform 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card:hover {
+      border-color: rgba(0,200,255,0.4);
+      transform: translateY(-4px);
+    }
+
+    .project-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--cyan);
+      opacity: 0.6;
+      margin-bottom: 1rem;
+    }
+
+    .project-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+
+    .project-card p {
+      font-size: 0.9rem;
+      color: var(--silver);
+      flex: 1;
+    }
+
+    .project-type {
+      margin-top: 1.25rem;
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* ── RESEARCH ── */
+    .research-block {
+      background: var(--navy);
+      border-left: 2px solid var(--cyan);
+      padding: 2rem 2.5rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .research-block h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+
+    .research-block p {
+      color: var(--silver);
+      font-size: 0.95rem;
+    }
+
+    .research-meta {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-family: 'Space Grotesk', sans-serif;
+      opacity: 0.7;
+    }
+
+    /* ── CONTACT ── */
+    .contact-inner {
+      max-width: 560px;
+    }
+
+    .contact-inner p {
+      color: var(--silver);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--silver);
+      font-size: 0.9rem;
+    }
+
+    .contact-row .label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      width: 80px;
+      flex-shrink: 0;
+    }
+
+    .contact-row a {
+      color: var(--silver);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .contact-row a:hover { color: var(--cyan); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(0,200,255,0.1);
+      padding: 2rem 6vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 100%;
+    }
+
+    footer p {
+      font-size: 0.78rem;
+      color: rgba(168,178,193,0.5);
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .nav-links { display: none; }
+      section { padding: 5rem 6vw; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Starfield Canvas -->
+  <canvas id="starfield"></canvas>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">JGO</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="hero-eyebrow">Aerospace Engineer &amp; Software Developer</p>
+    <h1 class="hero-name">
+      Jesutoni<br>Gabriel<br><span>OLUSESI</span>
+    </h1>
+    <p class="hero-tagline">
+      Prooviding solutions through aerospace engineering, satellite technology, and a relentless curiosity for what lies beyond.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <p class="section-label reveal">About</p>
+    <div class="section-divider reveal"></div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>
+          I am an <strong>Aerospace Engineering student from Nigeria</strong>, driven by a deep passion for understanding and shaping the 
+          technologies that define our future in the skies and beyond.
+        </p>
+        <p>
+          My interests span <strong>Satellite Technology</strong>, <strong>Aerospace Research</strong>, and <strong>Cybersecurity</strong> — fields I see
+             as deeply interconnected in the era of connected systems and space infrastructure.
+        </p>
+        <p>
+          I believe in learning by building. From gliders to lunar rovers, I bring ideas 
+          into the physical world and iterate until they fly — literally.
+        </p>
+      </div>
+      <div class="reveal">
+        <p style="color: var(--silver); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; font-family: 'Space Grotesk', sans-serif; margin-bottom: 1rem;">Areas of Interest</p>
+        <div class="interest-tags">
+          <span class="tag">Satellite Technology</span>
+          <span class="tag">Aerospace Research</span>
+          <span class="tag">Cybersecurity</span>
+          <span class="tag">UAV Systems</span>
+          <span class="tag">Space Engineering</span>
+          <span class="tag">Innovation</span>
+          <span class="tag">Carbon Capture</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <p class="section-label reveal">Technical Skills</p>
+    <div class="section-divider reveal"></div>
+    <h2 class="reveal">What I Work With</h2>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-icon">🐍</div>
+        <h3>Programming</h3>
+        <p>Python for scripting, automation, and engineering computations.</p>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🛠️</div>
+        <h3>3D Modelling</h3>
+        <p>SolidWorks and Fusion 360 for designing and modelling precise aerospace components and prototypes.</p>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">📊</div>
+        <h3>Simulation</h3>
+        <p>MATLAB for engineering simulation, modelling, and performance analysis.</p>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🔐</div>
+        <h3>Cybersecurity</h3>
+        <p>Actively developing skills in Security analysis.</p>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">✍️</div>
+        <h3>Research & Writing</h3>
+        <p>Academic research, technical documentation, and scientific paper writing.</p>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🚁</div>
+        <h3>Prototyping</h3>
+        <p>Hands-on design and assembly of UAVs, gliders, and rover systems.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <p class="section-label reveal">Projects</p>
+    <div class="section-divider reveal"></div>
+    <h2 class="reveal">Things I've Built</h2>
+    <div class="projects-grid">
+
+      <div class="project-card reveal">
+        <div class="project-number">PROJECT / 01</div>
+        <h3>Glider Prototype</h3>
+        <p>Designed and built a working glider prototype, exploring aerodynamics, lift generation, and structural material selection.</p>
+        <span class="project-type">Aerodynamics · Prototyping</span>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-number">PROJECT / 02</div>
+        <h3>Lunar Rover Prototype</h3>
+        <p>Developed a prototype lunar rover, using EV3 lego tool kit, to simulate how rovers avoid obstacles in the lunar environment.</p>
+        <span class="project-type">Space Systems · Robotics</span>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-number">PROJECT / 03</div>
+        <h3>RC Drone</h3>
+        <p>Built a remote-controlled drone from the ground up, integrating flight control systems, power management, and stability mechanisms.</p>
+        <span class="project-type">UAV Systems · Electronics</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section id="research">
+    <p class="section-label reveal">Research</p>
+    <div class="section-divider reveal"></div>
+    <h2 class="reveal">Research interest</h2>
+    <div class="research-block reveal">
+      <h3>Carbon Capture, Utilization and Storage (CCUS)</h3>
+      <p>
+        To make an innovative research on how Carbon emissions can be captured stored and converted to another form of energy
+      </p>
+      <p class="research-meta">Research Paper &nbsp;·&nbsp; Energy Systems</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-label reveal">Contact</p>
+    <div class="section-divider reveal"></div>
+    <h2 class="reveal">Let's Connect</h2>
+    <div class="contact-inner reveal">
+      <p>
+        I'm open to Research collaborations, Engineering discussions, and opportunities in Aerospace and Space technology. Feel free to reach out.
+      </p>
+      <div class="contact-links">
+        <div class="contact-row">
+          <span class="label">Email</span>
+          <a href="mailto:jesutoniolusesi@gmail.com">jesutoniolusesi@gmail.com</a>
+        </div>
+        <div class="contact-row">
+          <span class="label">LinkedIn</span>
+          <a href="https://linkedin.com/in/jesutoni-olusesi-8717b32bb" target="_blank">Jesutoni Olusesi</a>
+        </div>
+        <div class="contact-row">
+          <span class="label">Location</span>
+          <span>Nigeria</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Jesutoni Gabriel OLUSESI</p>
+    <p>Aerospace Engineer · Nigeria</p>
+  </footer>
+
+  <script>
+    /* ── STARFIELD ── */
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function initStars(n = 180) {
+      stars = [];
+      for (let i = 0; i < n; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.1 + 0.2,
+          a: Math.random(),
+          speed: Math.random() * 0.003 + 0.001,
+          drift: (Math.random() - 0.5) * 0.04
+        });
+      }
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(s => {
+        s.a += s.speed;
+        s.x += s.drift;
+        if (s.a > 1) s.a = 0;
+        if (s.x < 0) s.x = canvas.width;
+        if (s.x > canvas.width) s.x = 0;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0,200,255,${s.a * 0.6})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(drawStars);
+    }
+
+    window.addEventListener('resize', () => { resize(); initStars(); });
+    resize();
+    initStars();
+    drawStars();
+
+    /* ── SCROLL REVEAL ── */
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
